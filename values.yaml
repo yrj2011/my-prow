@@ -143,7 +143,7 @@ branchprotector:
     - --config-path=/etc/config/config.yaml
     - --github-token-path=/etc/github/oauth
     - --confirm
-    - --github-endpoint=https://api.github.com
+    - --github-endpoint=http://192.168.1.167
   resources:
     limits:
      cpu: 400m
@@ -286,7 +286,7 @@ tide:
   args:
     - --dry-run=false
     #- --github-endpoint=http://ghproxy
-    - --github-endpoint=https://github.com
+    - --github-endpoint=http://192.168.1.167
   resources:
     limits:
      cpu: 200m
