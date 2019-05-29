@@ -29,7 +29,6 @@ spec:
         - "github.io"
         - "githubusercontent.com"
         - "developer.github.com"
-
       serviceAccountName: {{ template "hook.name" . }}
       terminationGracePeriodSeconds: {{ .Values.hook.terminationGracePeriodSeconds }}
       containers:

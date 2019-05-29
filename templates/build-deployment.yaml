@@ -21,6 +21,15 @@ spec:
       labels:
         app: {{ template "build.name" . }}
     spec:
+      hostAliases:
+      - ip: "192.168.1.167"
+        hostnames:
+        - "github.com"
+        - "api.github.com"
+        - "www.github.com"
+        - "github.io"
+        - "githubusercontent.com"
+        - "developer.github.com"
       serviceAccountName: {{ template "build.name" . }}
       terminationGracePeriodSeconds: {{ .Values.build.terminationGracePeriodSeconds }}
       containers:
