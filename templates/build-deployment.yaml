@@ -1,0 +1,58 @@
+{{ if .Values.build.enabled }}
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "build.name" . }}
+  labels:
+    app: {{ template "build.name" . }}
+spec:
+  replicas: {{ .Values.build.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+{{- if .Values.build.datadog.enabled }}
+      annotations:
+        ad.datadoghq.com/build.logs: '[{"source":"prow","service":"build"}]'
+{{- end }}
+      labels:
+        app: {{ template "build.name" . }}
+    spec:
+      serviceAccountName: {{ template "build.name" . }}
+      terminationGracePeriodSeconds: {{ .Values.build.terminationGracePeriodSeconds }}
+      containers:
+      - name: {{ template "build.name" . }}
+        args:
+        - --tot-url
+        - http://buildnum
+        - --config
+        - /etc/config/config.yaml
+        image: {{ tpl .Values.build.image.repository . }}:{{ tpl .Values.build.image.tag . }}
+        imagePullPolicy: {{ .Values.build.imagePullPolicy }}
+        volumeMounts:
+        - mountPath: /etc/config
+          name: config
+          readOnly: true
+        resources:
+{{ toYaml .Values.build.resources | indent 10 }}
+    {{- with .Values.build.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.build.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.build.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: config
+        name: config
+{{ end }}

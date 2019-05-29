@@ -1,0 +1,78 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "deck.name" . }}
+  labels:
+    app: {{ template "deck.name" . }}
+spec:
+  replicas: {{ .Values.deck.replicaCount }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+{{- if .Values.deck.datadog.enabled }}
+      annotations:
+        ad.datadoghq.com/deck.logs: '[{"source":"prow","service":"deck"}]'
+{{- end }}
+      labels:
+        app: {{ template "deck.name" . }}
+    spec:
+      serviceAccountName: {{ template "deck.name" . }}
+      terminationGracePeriodSeconds: {{ .Values.deck.terminationGracePeriodSeconds }}
+      containers:
+      - name: {{ template "deck.name" . }}
+        image: {{ tpl .Values.deck.image.repository . }}:{{ tpl .Values.deck.image.tag . }}
+        imagePullPolicy: {{ .Values.deck.imagePullPolicy }}
+{{ if .Values.deck.args }}
+        args:
+{{ toYaml .Values.deck.args | indent 10 }}
+{{- end }}
+        ports:
+          - name: http
+            containerPort: {{ .Values.deck.service.internalPort }}
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.deck.probe.liveness.path }}
+            port: {{ .Values.deck.probe.liveness.port }}
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.deck.probe.readiness.path }}
+            port: {{ .Values.deck.probe.readiness.port }}
+          initialDelaySeconds: 10
+          periodSeconds: 3
+          timeoutSeconds: 600
+{{- if .Values.deck.env }}
+        env:
+{{- range $pkey, $pval := .Values.deck.env }}
+        - name: {{ $pkey }}
+          value: {{ $pval }}
+{{- end }}
+{{- end }}
+        resources:
+{{ toYaml .Values.deck.resources | indent 10 }}
+        volumeMounts:
+        - name: config
+          mountPath: /etc/config
+          readOnly: true
+      volumes:
+      - name: config
+        configMap:
+          name: config
+    {{- with .Values.deck.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.deck.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.deck.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

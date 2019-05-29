@@ -1,0 +1,25 @@
+{{ if .Values.buildnum.enabled }}
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: {{ template "buildnum.name" . }}
+rules:
+  - apiGroups:
+      - jenkins.io
+    resources:
+      - pipelineactivities
+    verbs:
+      - get
+      - watch
+      - list
+      - create
+      - update
+  - apiGroups:
+    - ""
+    resources:
+    - namespaces
+    verbs:
+    - get
+    - list
+    - watch
+{{ end }}    

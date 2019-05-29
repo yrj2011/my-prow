@@ -1,0 +1,44 @@
+{{ if .Values.pipelinerunner.enabled }}
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: {{ template "pipelinerunner.name" . }}
+rules:
+- apiGroups:
+  - jenkins.io
+  resources:
+  - pipelineactivities
+  - pipelinestructures
+  - environments
+  - sourcerepositories
+  - plugins
+  verbs:
+  - create
+  - list
+  - update
+  - get
+  - watch
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - configmaps
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - tekton.dev
+  resources:
+  - pipelineresources
+  - tasks
+  - pipelines
+  - pipelineruns
+  verbs:
+  - create
+  - list
+  - get
+  - update
+{{ end }}    
