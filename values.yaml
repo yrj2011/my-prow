@@ -98,7 +98,7 @@ buildnum:
   - "buildnumbers"
   resources:
     limits:
-     cpu: 400m
+     cpu: 200m
      memory: 256Mi
     requests:
      cpu: 200m
@@ -124,7 +124,7 @@ crier:
     - -github-token-path=/etc/github/oauth
   resources:
     limits:
-     cpu: 400m
+     cpu: 200m
      memory: 256Mi
     requests:
      cpu: 200m
@@ -146,7 +146,7 @@ branchprotector:
     - --github-endpoint=http://192.168.1.167
   resources:
     limits:
-     cpu: 400m
+     cpu: 200m
      memory: 256Mi
     requests:
      cpu: 200m
@@ -167,7 +167,7 @@ hook:
     - --dry-run=false
   resources:
     limits:
-     cpu: 400m
+     cpu: 200m
      memory: 256Mi
     requests:
      cpu: 200m
@@ -192,7 +192,7 @@ horologium:
     - --dry-run=false
   resources:
     limits:
-     cpu: 200m
+     cpu: 170m
      memory: 256Mi
     requests:
      cpu: 100m
@@ -210,7 +210,7 @@ plank:
     - --dry-run=false
   resources:
     limits:
-     cpu: 200m
+     cpu: 170m
      memory: 256Mi
     requests:
      cpu: 100m
@@ -227,7 +227,7 @@ build:
   terminationGracePeriodSeconds: 30
   resources:
     limits:
-     cpu: 200m
+     cpu: 170m
      memory: 256Mi
     requests:
      cpu: 100m
@@ -243,7 +243,7 @@ pipeline:
   terminationGracePeriodSeconds: 30
   resources:
     limits:
-     cpu: 200m
+     cpu: 170m
      memory: 256Mi
     requests:
      cpu: 100m
@@ -260,7 +260,7 @@ sinker:
   terminationGracePeriodSeconds: 30
   resources:
     limits:
-     cpu: 200m
+     cpu: 170m
      memory: 256Mi
     requests:
      cpu: 100m
@@ -289,7 +289,7 @@ tide:
     - --github-endpoint=http://192.168.1.167
   resources:
     limits:
-     cpu: 200m
+     cpu: 170m
      memory: 256Mi
     requests:
      cpu: 100m
