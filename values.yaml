@@ -7,7 +7,7 @@ image:
   tag: v20190411-88a8176fb
 
 deck:
-  replicaCount: 2
+  replicaCount: 1
   probe:
     liveness:
       path: /healthz
@@ -61,7 +61,7 @@ pipelinerunner:
   - "pipelinerunner"
   resources:
     limits:
-     cpu: 400m
+     cpu: 200m
      memory: 256Mi
     requests:
      cpu: 200m
@@ -155,7 +155,7 @@ branchprotector:
     enabled: "true"
 
 hook:
-  replicaCount: 2
+  replicaCount: 1
   probe:
     path: /
   image:
